@@ -1,0 +1,35 @@
+{% extends 'actions_base.html' %}
+
+{% block title%}
+  Choose your class!
+{% endblock %}
+
+{%block explanation%}
+<p>
+  What class are you?
+</p>
+<p>
+  The <b>Warrior</b> excels at head on combat. A rough and tumble mercenary type, they never back down from a fight!
+</p>
+<p>
+  the <b>Mage</b> is calm and collected, relying on spells to do their damage. Though seemingly frail, they pack a punch!
+</p>
+
+<p>
+  The <b>Thief</b> relies on stealth over all else. Their quick speed makes catching them unlikely, allowing hem to strike from the shadows!
+</p>
+
+{% endblock %}
+
+{% block class_options %}
+  <section>
+  <h3>Your Choices</h3>
+  <form target="_self" method="POST">
+    <input type="radio" name="class" value="warrior" checked> Warrior<br>
+    <input type="radio" name="class" value="mage"> Mage<br>
+    <input type="radio" name="class" value="thief"> Thief<br>
+    <input type="submit">
+  </form> 
+</section>
+{% endblock %}
+

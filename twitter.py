@@ -14,6 +14,10 @@ BOT_ARRAY = [
   "@carlomarxbot",
   ]
 
+#Get Twitter credentials
+with open("twitter_credentials.json", "r") as read_credentials:
+  credentials = json.load(read_credentials)
+
 ###########################################################################
 # get_tweets                                                              #
 #                                                                         #
@@ -46,10 +50,8 @@ def get_tweets(username, number_of_tweets):
 ###########################################################################
 # build_a_boss()
 # 
-# Returns an object of the Boss class to be used in the final game
+# Returns  Boss objects to be used in the final game
 # 
-# NOTE: noSQL approach only being used as a placeholder until the
-#       database code is up and running
 ###########################################################################
 def build_a_boss():
   #create a new Boss object
@@ -58,21 +60,33 @@ def build_a_boss():
   attributes_array = []
 
   # get all needed info from Twitter
-  # TODO add try block
-  for bot_name in BOT_ARRAY:
-    attributes_array.append(get_tweets(bot_name, 1))
+  try:
+    for bot_name in BOT_ARRAY:
+      attributes_array.append(get_tweets(bot_name, 1))
+
+    print("Boss info aquired from twitter")
+  except:
+    print("Could not access Twitter, loading default boss setup")
+    attributes_array.append("","","","")
 
   # parse array elements to get just the Tweet text
   name       = re.search(r'\[\'(.*)\'\]', str(attributes_array[0]), re.M|re.I )
   colour     = re.search(r'#(\D+)\s+#',   str(attributes_array[1]), re.M|re.I )
-  flavour    = re.search(r'\[(.*)\]', str(attributes_array[2]), re.M|re.I )
+  flavour    = re.search(r'\[(.*)\]',     str(attributes_array[2]), re.M|re.I )
   appearance = re.search(r'\[\'(.*)\'\]', str(attributes_array[3]), re.M|re.I )
+
+  #Add break tags in the appearance for insertion into html template
+  #appearance = appearance.group(1).replace('\\n','<br>')
+  #print(appearance)
+
 
   # using the gathered data, create the boss
   new_boss.name       = name.group(1)
   new_boss.colour     = colour.group(1)
   new_boss.flavour    = flavour.group(1)
   new_boss.appearance = appearance.group(1)
+
+  print("Appearance:\n", new_boss.appearance)
 
   return new_boss
 
@@ -81,10 +95,6 @@ def build_a_boss():
 #TESTING
 ###########################################################################
 if __name__ == "__main__":
-
-  #Import Twitter credentials from .json file
-  with open("twitter_credentials.json", "r") as read_credentials:
-    credentials = json.load(read_credentials)
 
   #test the get_tweets function here
   Boss = build_a_boss()

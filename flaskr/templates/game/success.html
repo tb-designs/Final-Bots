@@ -1,0 +1,24 @@
+{% extends 'actions_base.html' %}
+
+{% block title%}
+  Congratulations!
+{% endblock %}
+
+{% block explanation%}
+<p>
+  <b>Congratulations!</b>
+</p>
+<p>
+  You were able to defeat the beast and escape with your life! Do you dare face another of the eternals?
+</p>
+
+{% endblock %}
+
+{% block options %}
+<section>
+  <h3>Play Again?</h3>
+  <form target="_self" method="POST">
+    <input type="submit">
+  </form> 
+</section>
+{% endblock %}

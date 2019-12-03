@@ -1,0 +1,12 @@
+{
+  "python.pythonPath": "venv\\Scripts\\python.exe",
+  "python.linting.banditEnabled": true,
+  "python.linting.enabled": true,
+  "sqltools.connections": [
+    {
+      "database": "${workspaceFolder}\\flaskr/database.db",
+      "dialect": "SQLite",
+      "name": "FinalBotsdb"
+    }
+  ]
+}
