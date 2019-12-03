@@ -1,0 +1,61 @@
+{% extends 'actions_base.html' %}
+
+{% block title%}
+  Fight!
+{% endblock %}
+
+{% block boss_appearance %}
+  <p>
+    <b>
+       {{ b_name }}
+    </b>
+    watches you silently
+  </p>
+  <p>
+    {% for line in b_appearance%}
+      {{ line }}
+      <br>
+    {% endfor %}
+  </p>
+{% endblock %}
+
+{% block prev_turn %}
+  <p>
+    {% for line in turn_dialogue%}
+      {{ line }}
+    {% endfor %}
+  </p>
+{% endblock %}
+
+{%block explanation%}
+<p>
+  {{ b_flavour }}
+</p>
+{% endblock %}
+
+{% block health_table %}
+<table style="width: 30%">
+  <tr>
+    <th>Boss Health</th>
+    <th>Player Health</th>
+  </tr>
+  <tr>
+    <th>{{ b_health }}</th>
+    <th>{{ p1_health }}</th>
+  </tr>
+
+</table>
+{% endblock %}
+
+{% block options %}
+<section>
+  <h3>Your Choices</h3>
+  <form target="_self" method="POST">
+    <input type="radio" name="action" value="attack" checked> Attack<br>
+    <input type="radio" name="action" value="block"> Block<br>
+    <input type="radio" name="action" value="dodge"> Dodge<br>
+    <input type="submit">
+  </form> 
+</section>
+{% endblock %}
+

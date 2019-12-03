@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='flaskr',
+    name='finalbots',
     version='1.0.0',
     author="Ryan Blais"
     author_email="ryanblais@uvic.ca"
@@ -14,7 +14,6 @@ setup(
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
 )
