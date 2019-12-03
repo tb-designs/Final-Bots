@@ -46,12 +46,12 @@ class Character:
   previous_action = "none"
   current_action = "none"
   next_action = "none"
-
+  status = 'idle'
   # Methods
-  def __init__ (self, name, health, status):
-    self.name = 'none'
-    self.health = 0
-    self.status = "idle"
+  def __init__ (self):
+    self.name = 'name'
+    self.health = 100
+    self.status = 'idle'
   # end init
 
   def changeStatus(self, newStatus):
@@ -78,8 +78,10 @@ class Boss(Character):
 
   def set_stats(self, name):
     #Boss stats based on name length
+    print("Setting bos Stats")
     name_length = len(name)
-    if name_length < 10:
+    #print("name length:", name_length)
+    if name_length <= 10:
       # Balanced Stats
       self.pwr = name_length * 10
       self.int = name_length * 10
@@ -98,12 +100,12 @@ class Boss(Character):
 class Player(Character):
   # Attributes
   char_class = ''
-  equip = ''
+  #equip = ''
 
   # Methods
   # Default Player Setup, same as Character
-  def __init__ (self, name, health, status):
-    Character.__init__(name, health, status)
+  def __init__ (self):
+    Character.__init__(self)
   # end init
 
   def set_stats(self, char_class):

@@ -1,0 +1,29 @@
+<!doctype html>
+
+<title>{% block title %}{% endblock %} - Final Bots</title>
+<body>
+  <section>
+    <h1>Final Bots</h1>
+    {% block explanation%}{% endblock %}
+  </section>
+
+  <section>
+    {% block boss_appearance %}
+    {% endblock %}
+    
+    {% block class_options %}
+    {% endblock %}
+  <section>
+    {% block health_table%}
+    {% endblock %}
+  </section>
+
+  <section>
+    {% block prev_turn%}
+    {% endblock %}
+  </section>
+
+  {% block options %}{% endblock %}
+</body>
+
+</html>
