@@ -4,6 +4,8 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from models import db as finalbots_db
 
+
+#Create Flask App
 def create_app(test_config=None):
   # create and configure the web application
   app = Flask(__name__, instance_relative_config=True)
@@ -12,7 +14,7 @@ def create_app(test_config=None):
     SECRET_KEY='dev',
     DATABASE=os.path.join(app.instance_path, 'database.sqlite'),
   )
-
+  #Grab config from config.py
   if test_config is None:
     # load instance config if not testing
     app.config.from_object(Config)

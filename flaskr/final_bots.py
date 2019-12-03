@@ -7,56 +7,86 @@ from forms import ActionsForm, CharacterForm
 from flask_sqlalchemy import SQLAlchemy
 from models import db as finalbots_db
 from models import Character, Actions
-import twitter
 from turn_result import random_boss_action, get_turn_order, update_health, turn_result
+import twitter
 
 #Flask import stuff
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for,
 )
 
+#init flask bluprint
 bp = Blueprint('finalbots', __name__, url_prefix='/finalbots')
 
-# Before and ater 
 
-
-#############################
-#          HomePage         #
-#############################
+####################################################################
+#                            Homepage                              #
+####################################################################
+#
+#   Purpose:      The homepage is the designated beginning of the
+#                 game. This is where the databases are initialized
+#                 (cleared) and the player has the option to start
+#                 the game. This is also the page where the Success
+#                 and Defeat pages re-direct to for re-starting the
+#                 game.
+#
+#   Explanation:  Once the player presses the "Submit" button, the
+#                 the database is cleared and re-initialized and the
+#                 player is sent to the character creation page
+#
 @bp.route('/', methods=('GET', 'POST'))
 def homepage():
     if request.method == 'POST':
-        # init database here, this is where the relevant game info will be stored
+        # Clear the database
         finalbots_db.drop_all()
         finalbots_db.create_all()
         return redirect(url_for('finalbots.select'))
     return render_template('game/home.html')
 
-#############################
-#     Character Creation    #
-#############################
+
+####################################################################
+#                       Character Creation                         #
+####################################################################
+#
+#   Purpose:      This page is where the player decides to choose their
+#                 character class. This decides the players stats for 
+#                 the duration of the game. This page also performs the
+#                 Twitter info requests and initializes the boss for this
+#                 game session. Boss and Character information is stored in
+#                 the SQL "Character" table.
+#
+#   Explanation:  As soon as the page is loaded, the game server sends the
+#                 request to the Twitter servers and creates a boss object.
+#                 This boss object is then used to save the boss in the SQL
+#                 Character table. Once the player chooses their class and 
+#                 presses "Submit", their choice is used to create a player
+#                 entry in the "Character" table. The player is then redirected
+#                 to the Actions Choice page. 
+#
+#
+
 @bp.route('/select', methods=('GET', 'POST'))
 def select():
-    #As soon as we get the page we initialize the db and boss
+    #Run as soon as the page is grabbed
     if request.method == 'GET':
-        #Build the Boss out of twiter bots
+        #Build the Boss out of the twiter bots
         boss = twitter.build_a_boss()
+        #Give the boss its stats
         boss.set_stats(boss, boss.name);
 
-        #create db
+        #Get the database
         get_db()
 
-        #Create boss entry in the character table
+        #Create boss entry in the character SQL table (Use SQLAlchemy-flask)
         b1 = Character(title='boss', health=1000, name=boss.name, desc=boss.flavour, pwr=boss.pwr, spd=boss.spd, intel=boss.int, appearance=boss.appearance) #TODO debug this
         finalbots_db.session.add(b1)  
         finalbots_db.session.commit()      
 
-    #Once player chooses their class, create an entry for them in the db
+    #Run when player presses "Submit"
     if request.method == 'POST' and 'class' in request.form:
         session['class'] = request.form.get('class')
-        #print(session['class']) #used for debugging
 
-        #Create the character
+        #Create player entry in the Character SQL table
         if session['class'] == 'warrior':
             p1 = Character(title = 'player1', health = 100, pwr = 15, spd = 10, intel = 5)
         elif session['class'] == 'mage':
@@ -67,20 +97,31 @@ def select():
         # Add and commit to db
         finalbots_db.session.add(p1)
         finalbots_db.session.commit() 
-        ########################################
-        # TESTING
-        ########################################
-
 
         #proceeed to the choose action page
         return redirect(url_for('finalbots.choose'))
 
-    #else stays on the page until submit is made
     return render_template('game/creation.html')
 
-#############################
-#       Choose Actions      #
-#############################
+
+####################################################################
+#                         Choose Actions                           #
+####################################################################
+#
+#   Purpose:      This page is where the player spends the majority
+#                 of the game. It displays the boss information,
+#                 information about the previous turn, both characters
+#                 health total and the current choices availble to the
+#                 player.
+#
+#   Explanation:  Every time the page loads it uses the most recent
+#                 information from the SQL databases.
+#                 Upon choosing an action, the turn calculation is 
+#                 made (which updates the SQL tables) and the page 
+#                 is reloaded. This continues until either the player
+#                 or the boss is defeated.
+#
+
 @bp.route('/choose', methods=('GET', 'POST'))
 def choose():
     # Update the boss class with the newest info from db
@@ -103,16 +144,11 @@ def choose():
         new_actions = Actions(p_action = player_action, b_action= boss_action)
         finalbots_db.session.add(new_actions)
         finalbots_db.session.commit()
-        ########################################
-        # TESTING
-        ########################################
-        #actions = Actions.query.order_by(Actions.id.desc()).first()
-        #print("Boss action:", actions.b_action, "Player action:", actions.p_action)
-        #do the turn result calculations
 
         #calculate turn result (updates tables in the function)
         results = turn_result(turn_order_list)
 
+        #Get the dialogue from the turn
         result_dialogue = results[1]
 
         #check results for deaths
@@ -154,18 +190,29 @@ def choose():
         b_name=boss_new.name
         )    
 
-#############################
-#       Success screen      #
-#############################
+####################################################################
+#                         Success Screen                           #
+####################################################################
+#
+#   Purpose:      This page diplays the Congratulation message for if
+#                 the player succesfully defeats the boss. The player
+#                 can also choose to re-start the game from this page.
+#
+
 @bp.route('/congrats', methods=('GET', 'POST'))
 def success():
     if request.method == 'POST':
         return redirect(url_for('finalbots.homepage'))
     return render_template('game/success.html') 
 
-#############################
-#       Defeat Screen       #
-#############################
+####################################################################
+#                          Defeat Screen                           #
+####################################################################
+#
+#   Purpose:      This page diplays the Condolances message for if the
+#                 player sis killed by the boss. The player can also
+#                 choose to re-start the game from this page.
+#
 @bp.route('/toobad', methods=('GET', 'POST'))
 def defeat():
     if request.method == 'POST':

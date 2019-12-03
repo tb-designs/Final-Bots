@@ -14,7 +14,7 @@ BOT_ARRAY = [
   "@carlomarxbot",
   ]
 
-#Get Twitter credentials
+#Get Twitter credentials from local json file (not uploaded to github)
 with open("twitter_credentials.json", "r") as read_credentials:
   credentials = json.load(read_credentials)
 
@@ -63,7 +63,6 @@ def build_a_boss():
   try:
     for bot_name in BOT_ARRAY:
       attributes_array.append(get_tweets(bot_name, 1))
-
     print("Boss info aquired from twitter")
   except:
     print("Could not access Twitter, loading default boss setup")
@@ -75,18 +74,11 @@ def build_a_boss():
   flavour    = re.search(r'\[(.*)\]',     str(attributes_array[2]), re.M|re.I )
   appearance = re.search(r'\[\'(.*)\'\]', str(attributes_array[3]), re.M|re.I )
 
-  #Add break tags in the appearance for insertion into html template
-  #appearance = appearance.group(1).replace('\\n','<br>')
-  #print(appearance)
-
-
   # using the gathered data, create the boss
   new_boss.name       = name.group(1)
   new_boss.colour     = colour.group(1)
   new_boss.flavour    = flavour.group(1)
   new_boss.appearance = appearance.group(1)
-
-  print("Appearance:\n", new_boss.appearance)
 
   return new_boss
 
