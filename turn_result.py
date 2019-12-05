@@ -46,7 +46,7 @@ def get_turn_order():
   p1 = Character.query.filter_by(title='player1').first()
 
   turn_order = []
-  print("Boss Speed:", boss.spd, "Player Speed:", p1.spd)
+
   if (boss.spd/10) > p1.spd:
     turn_order.append(boss.title)
     turn_order.append(p1.title)

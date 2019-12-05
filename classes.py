@@ -78,7 +78,7 @@ class Boss(Character):
 
   def set_stats(self, name):
     #Boss stats based on name length
-    print("Setting bos Stats")
+    print("Setting Boss Stats")
     name_length = len(name)
     #print("name length:", name_length)
     if name_length <= 10:
