@@ -78,7 +78,7 @@ def select():
         get_db()
 
         #Create boss entry in the character SQL table (Use SQLAlchemy-flask)
-        b1 = Character(title='boss', health=1000, name=boss.name, desc=boss.flavour, pwr=boss.pwr, spd=boss.spd, intel=boss.int, appearance=boss.appearance) #TODO debug this
+        b1 = Character(title='boss', health=200, name=boss.name, desc=boss.flavour, pwr=boss.pwr, spd=boss.spd, intel=boss.int, appearance=boss.appearance) #TODO debug this
         finalbots_db.session.add(b1)  
         finalbots_db.session.commit()      
 
