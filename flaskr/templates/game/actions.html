@@ -7,11 +7,10 @@
 {% block boss_appearance %}
   <p>
     <b>
-       {{ b_name }}
+      <h2>{{ b_name }}</h2>
     </b>
-    watches you silently
   </p>
-  <p>
+  <p id="appearance">
     {% for line in b_appearance%}
       {{ line }}
       <br>
@@ -34,7 +33,7 @@
 {% endblock %}
 
 {% block health_table %}
-<table style="width: 30%">
+<table align="center" style="width: 100%">
   <tr>
     <th>Boss Health</th>
     <th>Player Health</th>

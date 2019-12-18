@@ -5,7 +5,7 @@ db = SQLAlchemy()
 class Character(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(64), index=True, unique=True)
-  desc = db.Column(db.String(240))
+  desc = db.Column(db.String(280))
   name = db.Column(db.String(64))
   health = db.Column(db.Integer)
   pwr = db.Column(db.Integer)

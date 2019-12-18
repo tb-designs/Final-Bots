@@ -1,9 +1,15 @@
 <!doctype html>
+<head>
+    <title>
+      {% block title %}
+      {% endblock %} 
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
 
-<title>{% block title %}{% endblock %} - Final Bots</title>
 <body>
   <section>
-    <h1>Final Bots</h1>
+    <h1 id='title'>Final Bots</h1>
     {% block explanation%}{% endblock %}
   </section>
 
